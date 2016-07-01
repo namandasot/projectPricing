@@ -4,7 +4,11 @@ from models import AllProjectInfo
 from serializers import AllProjectInfoSerializer
 from datetime import datetime as dtime
 import datetime
+from pricingRel import PricingScore
 # Create your views here.
+
+pricingScore = PricingScore()
+
 class Location:  
 
     def getLocationName(self,locationId):
@@ -64,9 +68,9 @@ def price(request):
     print budget
     print bhk
 #     print len(allProjectInfo)
-    '''call naman's method'''
-    dummyResult = {'544':'250','545':'300','546':'350'}
-    return Response(dummyResult)
+    result = pricingScore.pricingLeads(int(budget),locationName,int(bhk),allProjectInfo)
+#     dummyResult = {'544':'250','545':'300','546':'350'}
+    return Response(result)
 
 
 
