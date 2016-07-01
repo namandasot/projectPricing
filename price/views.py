@@ -1,0 +1,73 @@
+from django.shortcuts import render
+from rest_framework.response import Response
+from models import AllProjectInfo
+from serializers import AllProjectInfoSerializer
+from datetime import datetime as dtime
+import datetime
+# Create your views here.
+class Location:  
+
+    def getLocationName(self,locationId):
+        return AllProjectInfo.objects.filter(project_area=locationId).values('project_area_name').distinct()[0]['project_area_name']
+    
+    def getCityName(self,locationId):
+        return AllProjectInfo.objects.filter(project_area=locationId).values('project_city_name').distinct()[0]['project_city_name']
+    
+location = Location()
+
+def getPossessionDays(possessionDate):
+    try:
+        d1 = dtime.strptime(possessionDate, "%Y-%m-%d")
+    except:
+        return 0
+    d2 = dtime.strptime(str(datetime.date.today()), "%Y-%m-%d")
+    days = (d1 - d2).days
+    if days<0:
+        return 0
+    else:
+        return days
+
+def getAllProjectInfo(cityName):
+    allData = list(AllProjectInfo.objects.filter(project_city_name=cityName).exclude(config_type='LAND'))
+    
+    allProperties = []
+    for property in allData:
+        propDict = AllProjectInfoSerializer(property).data
+        propDict['No_Of_Bedroom'] = float(str(propDict['No_Of_Bedroom']))
+#         print propDict['No_Of_Bedroom']
+        propDict['Possession'] = getPossessionDays(propDict['Possession'])
+        propDict['locality_name'] = propDict['Project_Area_Name'] +', '+ propDict['Project_Suburb_Name'] +', ' +propDict['Project_City_Name']
+        if propDict['amenities']:
+            propDict['amenities']=propDict['amenities'][1:-1].split(',')
+        else:
+            propDict['amenities']=None
+        allProperties.append(propDict)
+    return allProperties
+
+from rest_framework.decorators import api_view
+
+@api_view(['GET'])
+def price(request):
+    locations = request.GET.get('location',None)
+    budget = request.GET.get('budget',None)
+    bhk = request.GET.get('bhk',None)
+    cityName = ''
+    locationName = []
+    if locations:
+        locationList = locations.split(',')
+        cityName = location.getCityName(locationList[0])
+        for locationId in locationList:
+            locationName.append(location.getLocationName(locationId))
+    allProjectInfo = getAllProjectInfo(cityName)
+    print cityName
+    print locationName
+    print budget
+    print bhk
+#     print len(allProjectInfo)
+    '''call naman's method'''
+    dummyResult = {'544':'250','545':'300','546':'350'}
+    return Response(dummyResult)
+
+
+
+    
