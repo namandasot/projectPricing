@@ -186,6 +186,9 @@ class PricingScore:
 			if total!=0:
 				x = round(priceDict[proj]* (max(0.8,1.0-float(freq_project[proj])/total)),0) / 2
 				priceDict[proj] = [max(self.minPricingLead, int(self.websiteLeadFactor*x)) , int(x) ,int(self.cherryPickPreFactor * x ), int(self.cherryPickPostFactor * x )]
+			else:
+				x = (priceDict[proj]) / 2
+				priceDict[proj] = [max(self.minPricingLead, int(self.websiteLeadFactor*x)) , int(x) ,int(self.cherryPickPreFactor * x ), int(self.cherryPickPostFactor * x )]
 
 		return priceDict
 
