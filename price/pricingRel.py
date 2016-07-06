@@ -44,17 +44,18 @@ class PricingScore:
 		for i,projectConfigNo in enumerate(projectConfigNoList):
 			# print projectConfigNo
 			if(self.filterArray[i]==1):
-				if(pricingRelScoreArr[i] > 7):
-					d[projectConfigNo] = (pricingRelScoreArr[i] +2.5)/10.0
+				if(pricingRelScoreArr[i] > 6.5):
+					d[projectConfigNo] = (pricingRelScoreArr[i] +3)/10.0
 		# print d
 		return d
 
 	def getPossessionScore (self,possesion,propList):
 		possesionScorelist = []
 		possesionScore = 0
+		possesion = int(possesion)
 		possesionList = map (lambda x:x[self.posession],propList)
 		for i,poss in enumerate(possesionList):
-			diff = poss - possesion
+			diff = int(poss) - possesion
 
 			if(possesion == -1):
 				possesionScorelist.append(10)
