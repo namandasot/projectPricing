@@ -16,6 +16,11 @@ class PricingScore:
 		self.cherryPickPreFactor = 1.4
 		self.cherryPickPostFactor = 1.5
 		self.minPricingLead = 250
+		self.posession = 'Possession'
+		self.sixmonths = 190
+		self.oneYear = 370
+		self.twoYear = 900
+
 
 
 
@@ -27,9 +32,11 @@ class PricingScore:
 
 	def pricingRelScore(self,budget,location,BHK,possesion,propList):
 		self.filterArray = [1]*(len(propList))
-		pricingRelScoreArr = self.getBudgetScore(budget,propList)+self.getBHKScore(BHK,propList)
+		pricingRelScoreArr = self.getBudgetScore(budget,propList)+self.getBHKScore(BHK,propList) +self.getPossessionScore(possesion,propList)
+		
+		# self.getPossessionScore	(possesion,propList)
 		self.getLocationScore(location,propList)
-		pricingRelScoreArr =  pricingRelScoreArr/2.0
+		pricingRelScoreArr =  pricingRelScoreArr/3.0
 
 
 		projectConfigNoList = map (lambda x:x[self.projectConfigNumber],propList)
@@ -37,11 +44,57 @@ class PricingScore:
 		for i,projectConfigNo in enumerate(projectConfigNoList):
 			# print projectConfigNo
 			if(self.filterArray[i]==1):
-				if(pricingRelScoreArr[i] > 8):
-					d[projectConfigNo] = (pricingRelScoreArr[i] +2)/10.0
+				if(pricingRelScoreArr[i] > 7):
+					d[projectConfigNo] = (pricingRelScoreArr[i] +2.5)/10.0
 		# print d
 		return d
 
+	def getPossessionScore (self,possesion,propList):
+		possesionScorelist = []
+		possesionScore = 0
+		possesionList = map (lambda x:x[self.posession],propList)
+		for i,poss in enumerate(possesionList):
+			diff = poss - possesion
+
+			if(possesion == -1):
+				possesionScorelist.append(10)
+				continue
+			if(possesion > self.twoYear ):
+				if(poss > possesion ):
+					possesionScore = 10
+				else:
+					possesionScore = self.getLineValueAll(self.twoYear,10,self.oneYear,1,poss)
+
+				possesionScore = max(0,min(10,possesionScore))
+				possesionScorelist.append(possesionScore)
+				continue
+
+			if(diff <=0 ):
+				possesionScore = 10
+
+
+			elif possesion <= self.sixmonths:
+				if(diff > self.sixmonths):
+					possesionScore = 0
+				else:
+					possesionScore = self.getLineValueAll(0,10,self.sixmonths,1,diff)
+
+			else:
+				if(diff > self.oneYear):
+					possesionScore = 0
+				else:
+					possesionScore = self.getLineValueAll(0,10,self.oneYear,1,diff)
+
+
+
+
+
+
+			possesionScore = max(0,min(10,possesionScore))
+			possesionScorelist.append(possesionScore)
+		possesionScorelist = np.array(possesionScorelist)
+		return possesionScorelist
+		
 
 
 	def getBudgetScore(self,searchBudget,propList):
