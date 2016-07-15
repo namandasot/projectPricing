@@ -20,15 +20,46 @@ class PricingScore:
 		self.sixmonths = 190
 		self.oneYear = 370
 		self.twoYear = 900
+		self.price_weight=0.7
+		self.cost_weight=0.25
+		self.CPLCostMax = 3000
+		self.CPLCostMin = 250
+ 
+	def cost_factor(self,relList):
+		db=MySQLdb.connect(host="52.35.25.23" , port = 3306, user = "ITadmin",passwd = "ITadmin" ,db ="CPL")
+		cursor=db.cursor()
+		cursor.execute("Select project_id,sum(cost),sum(lead_ad) from cost_output_july where date >= '2016-04-01' group by project_id")
 
+		proj_cost=[]
+		for rows in cursor.fetchall():
+			proj_cost.append(rows)
 
-
+		for project in relList:
+			for row in proj_cost:
+				if project==row[0]:
+					x = (float(row[1])/(float(row[2])+1.0))
+					# x = max(self.CPLCostMin,min(self.CPLCostMax,x))
+					x = x * self.cost_weight  + relList[project] * self.price_weight
+					x = max(self.CPLCostMin,min(self.CPLCostMax,x))
+					print x
+					relList[project] = x
+		print relList
+		return relList
 
 	def pricingLeads(self,budget,location,BHK,possesion,propList):
 		x = self.pricingRelScore(budget,location,BHK,possesion,propList)
-		z = self.price1(x)
-		returnDict = self.quality_factor(z)
+		x = self.price1(x)
+		returnDict = self.quality_factor(x)
+		returnDict = self.cost_factor(returnDict)
+		returnDict = self.getPrices(returnDict)
 		return returnDict
+
+	def getPrices(self,propList):
+		for proj in propList:
+			x = propList[proj]
+			propList[proj] = [max(self.minPricingLead, int(self.websiteLeadFactor*x)) , max(self.minPricingLead,int(x)) ,max(self.minPricingLead,int(self.cherryPickPreFactor * x )), max(self.minPricingLead,int(self.cherryPickPostFactor * x ))]
+
+		return propList
 
 	def pricingRelScore(self,budget,location,BHK,possesion,propList):
 		self.filterArray = [1]*(len(propList))
@@ -46,7 +77,6 @@ class PricingScore:
 			if(self.filterArray[i]==1):
 				if(pricingRelScoreArr[i] > 6.5):
 					d[projectConfigNo] = (pricingRelScoreArr[i] +3)/10.0
-		# print d
 		return d
 
 	def getPossessionScore (self,possesion,propList):
@@ -86,11 +116,6 @@ class PricingScore:
 				else:
 					possesionScore = self.getLineValueAll(0,10,self.oneYear,1,diff)
 
-
-
-
-
-
 			possesionScore = max(0,min(10,possesionScore))
 			possesionScorelist.append(possesionScore)
 		possesionScorelist = np.array(possesionScorelist)
@@ -103,7 +128,7 @@ class PricingScore:
 		propPriceList = map (lambda x:x[self.price],propList)
 		budgetScoreList = []
 		for i,propPrice in enumerate(propPriceList):
-			if(propPrice > searchBudget*1.2 or propPrice < searchBudget*0.8):
+			if(propPrice > searchBudget*1.2 or propPrice < searchBudget*0.7):
 				self.filterArray[i] = 0
 				budgetScoreList.append(0)
 				continue
@@ -214,7 +239,6 @@ class PricingScore:
 
 	
 	def quality_factor(self,priceDict):
-	
 		db=MySQLdb.connect(host="52.35.25.23" , port = 3306, user = "ITadmin",passwd = "ITadmin" ,db ="REDADMIN2")
 		cur=db.cursor()
 		currDate = datetime.date.today()
@@ -235,15 +259,15 @@ class PricingScore:
 		total=0.0
 		for proj in priceDict:
 			total+= freq_project[proj]
-
+ 		print "priceDict " , priceDict
 		for proj in priceDict:
 			if total!=0:
 				x = round(priceDict[proj]* (max(0.8,1.0-float(freq_project[proj])/total)),0) / 2
-				priceDict[proj] = [max(self.minPricingLead, int(self.websiteLeadFactor*x)) , int(x) ,int(self.cherryPickPreFactor * x ), int(self.cherryPickPostFactor * x )]
 			else:
 				x = (priceDict[proj]) / 2
-				priceDict[proj] = [max(self.minPricingLead, int(self.websiteLeadFactor*x)) , int(x) ,int(self.cherryPickPreFactor * x ), int(self.cherryPickPostFactor * x )]
 
+			priceDict[proj] = int(x)
+		print "priceDict " , priceDict
 		return priceDict
 
 if __name__ == '__main__':
@@ -253,3 +277,8 @@ if __name__ == '__main__':
 	print p.pricingLeads(6460000,['Malad'],0,90,recoPropAttrList)
 
 
+"""
+				priceDict[proj] = [max(self.minPricingLead, int(self.websiteLeadFactor*x)) , int(x) ,int(self.cherryPickPreFactor * x ), int(self.cherryPickPostFactor * x )]
+
+
+"""
