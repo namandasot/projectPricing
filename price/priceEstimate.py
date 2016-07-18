@@ -37,16 +37,15 @@ class pricingEstimate:
                 elif(priceProject > max_price_range_second):
                     cpl_amount_basic = max_cpl_second
         
-        
         cpl_amount_basic = cpl_amount_basic/2
         
-        returnList = []
-        returnList.append(max(self.minPricingLead,cpl_amount_basic*self.websiteLeadFactor))
-        returnList.append(cpl_amount_basic)
-        return returnList
+        returnDict = {}
+        returnDict["allWebsite"] = int(max(self.minPricingLead,cpl_amount_basic*self.websiteLeadFactor))
+        returnDict["allTelephonic"] =  int(cpl_amount_basic)                    
+        return returnDict
     
 if __name__ == '__main__':
     p = pricingEstimate()
-    print p.getPriceEstimate(7000000, "Mumbai")
+    print p.getPriceEstimate(8000000, 1)
     
     
