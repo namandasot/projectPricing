@@ -5,6 +5,7 @@ from serializers import AllProjectInfoSerializer
 from datetime import datetime as dtime
 import datetime
 from pricingRel import PricingScore
+from priceEstimate import pricingEstimate
 # Create your views here.
 
 pricingScore = PricingScore()
@@ -69,6 +70,13 @@ def price(request):
 #     dummyResult = {'544':'250','545':'300','546':'350'}
     return Response(result)
 
+pEstimate = pricingEstimate()
 
+@api_view(['GET'])
+def estimate(request):
+    budget= int(request.GET.get('budget',None))
+    city = int(request.GET.get('city',None))
+    result = pEstimate.getPriceEstimate(budget, city)
+    return Response(result)
 
     
