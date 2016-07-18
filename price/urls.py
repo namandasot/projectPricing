@@ -18,6 +18,6 @@ from django.contrib import admin
 from price import views
 
 urlpatterns = [
-
+    url(r'^estimate', views.estimate),
     url(r'',views.price),
 ]
