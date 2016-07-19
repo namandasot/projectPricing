@@ -5,7 +5,7 @@ class pricingEstimate:
         self.websiteLeadFactor = 0.33
         self.minPricingLead = 250
         
-    def getPriceEstimate(self,budget,city):
+    def getPriceEstimate(self,budget,projectNo):
         budget = budget
         db=MySQLdb.connect(host="52.35.25.23" , port = 3306, user = "ITadmin",passwd = "ITadmin" ,db ="REDADMIN2")
         cur=db.cursor()
@@ -14,7 +14,16 @@ class pricingEstimate:
         cplPricingCity = []
         for row in cur.fetchall():
             cplPricingCity.append(row)
+            
+        cur=db.cursor()
+        query = "Select Project_No, Project_Config_No,Project_City from all_project_info where Project_No="+str(projectNo)
+        cur.execute(query)
+        projectDetails = []
+        for row in cur.fetchall():
+            projectDetails.append(row)
         
+        city = projectDetails[0][2]
+        print city
 #         print cplPricingCity
         cpl_amount_basic = 1500
         
@@ -46,6 +55,6 @@ class pricingEstimate:
     
 if __name__ == '__main__':
     p = pricingEstimate()
-    print p.getPriceEstimate(8000000, 1)
+    print p.getPriceEstimate(8000000, 19052)
     
     
