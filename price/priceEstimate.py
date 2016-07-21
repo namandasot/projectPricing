@@ -16,14 +16,13 @@ class pricingEstimate:
             cplPricingCity.append(row)
             
         cur=db.cursor()
-        query = "Select Project_No, Project_Config_No,Project_City from all_project_info where Project_No="+str(projectNo)
+        query = "Select Project_No,Project_City from project_master where Project_No="+str(projectNo)
         cur.execute(query)
         projectDetails = []
         for row in cur.fetchall():
             projectDetails.append(row)
-        
-        city = projectDetails[0][2]
-        print city
+        city = projectDetails[0][1]
+
 #         print cplPricingCity
         cpl_amount_basic = 1500
         
