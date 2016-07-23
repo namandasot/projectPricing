@@ -6,6 +6,8 @@ from datetime import datetime as dtime
 import datetime
 from pricingRel import PricingScore
 from priceEstimate import pricingEstimate
+from cityPriceEstimate import cityPricingEstimate
+
 # Create your views here.
 
 pricingScore = PricingScore()
@@ -71,6 +73,8 @@ def price(request):
     return Response(result)
 
 pEstimate = pricingEstimate()
+cpEstimate = cityPricingEstimate()
+
 
 @api_view(['GET'])
 def estimate(request):
