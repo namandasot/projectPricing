@@ -243,11 +243,10 @@ class PricingScore:
 		cur=db.cursor()
 		currDate = datetime.date.today()
 		# print currDate
-		prevMonth =  currDate - datetime.timedelta(days=30)
+		prevMonth =  currDate - datetime.timedelta(days=90)
 
 		query = "Select Project_No from project_enquiry_requests Where Created_Dt >= \"" + str(prevMonth) +"\""
 		# print query
-
 		cur.execute(query)
 
 		list_project_lead= []
