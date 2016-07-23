@@ -19,5 +19,6 @@ from price import views
 
 urlpatterns = [
     url(r'^estimate', views.estimate),
+    url(r'^cityEstimator', views.cityEstimator),
     url(r'',views.price),
 ]

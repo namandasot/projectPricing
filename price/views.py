@@ -83,4 +83,11 @@ def estimate(request):
     result = pEstimate.getPriceEstimate(budget, project)
     return Response(result)
 
+
+@api_view(['GET'])
+def cityEstimator(request):
+    budget= int(request.GET.get('budget',None))
+    city = int(request.GET.get('city',None))
+    result = cpEstimate.getPriceEstimate(budget, city)
+    return Response(result)
     
