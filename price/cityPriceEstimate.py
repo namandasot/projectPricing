@@ -2,7 +2,7 @@ import MySQLdb
 
 class cityPricingEstimate:
     def __init__(self):
-        self.websiteLeadFactor = 0.33
+        self.websiteLeadFactor = float(1.0/3)
         self.minPricingLead = 250
         
     def getPriceEstimate(self,budget,city):
