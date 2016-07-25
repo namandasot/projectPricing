@@ -24,11 +24,19 @@ class PricingScore:
 		self.cost_weight=0.25
 		self.CPLCostMax = 3000
 		self.CPLCostMin = 250
+		self.db=MySQLdb.connect(host="52.35.25.23" , port = 3306, user = "ITadmin",passwd = "ITadmin" ,db ="REDADMIN2")
+		self.CPLdb=MySQLdb.connect(host="52.35.25.23" , port = 3306, user = "ITadmin",passwd = "ITadmin" ,db ="CPL")
+
  
 	def cost_factor(self,relList):
-		db=MySQLdb.connect(host="52.35.25.23" , port = 3306, user = "ITadmin",passwd = "ITadmin" ,db ="CPL")
-		cursor=db.cursor()
-		cursor.execute("Select project_id,sum(cost),sum(lead_ad) from cost_output_july where date >= '2016-04-01' group by project_id")
+		cursor=self.CPLdb.cursor()
+		currDate = datetime.date.today()
+		# print currDate
+		prevMonth =  currDate - datetime.timedelta(days=90)
+		query = "Select project_id,sum(cost),sum(lead_ad) from cost_output_july where date >= \""+ str(prevMonth) + "\" group by project_id"
+		print query
+# 		query = "Select Project_No from project_enquiry_requests Where Created_Dt >= \"" + str(prevMonth) +"\""
+		cursor.execute(query)
 
 		proj_cost=[]
 		for rows in cursor.fetchall():
@@ -38,12 +46,9 @@ class PricingScore:
 			for row in proj_cost:
 				if project==row[0]:
 					x = (float(row[1])/(float(row[2])+1.0))
-					# x = max(self.CPLCostMin,min(self.CPLCostMax,x))
 					x = x * self.cost_weight  + relList[project] * self.price_weight
 					x = max(self.CPLCostMin,min(self.CPLCostMax,x))
-					print x
 					relList[project] = x
-		print relList
 		return relList
 
 	def pricingLeads(self,budget,location,BHK,possesion,propList):
@@ -192,14 +197,13 @@ class PricingScore:
 
 
 	def price1(self,relList):
-		db=MySQLdb.connect(host="52.35.25.23" , port = 3306, user = "ITadmin",passwd = "ITadmin" ,db ="REDADMIN2")
-		cur=db.cursor()
+		cur=self.db.cursor()
 		cur.execute("Select city_id,min_cpl,max_cpl,max_cpl_second,min_price_range,max_price_range,max_price_range_second from insta_lead_cpl ")
 		cplPricingCity = []
 		for row in cur.fetchall():
 			cplPricingCity.append(row)
 
-		cur=db.cursor()
+		cur=self.db.cursor()
 		cur.execute("Select Project_No, Project_Config_No,Project_City, Minimum_Price,Maximum_Price from all_project_info")
 		projectCityMap = []
 		for row in cur.fetchall():
@@ -239,8 +243,7 @@ class PricingScore:
 
 	
 	def quality_factor(self,priceDict):
-		db=MySQLdb.connect(host="52.35.25.23" , port = 3306, user = "ITadmin",passwd = "ITadmin" ,db ="REDADMIN2")
-		cur=db.cursor()
+		cur=self.db.cursor()
 		currDate = datetime.date.today()
 		# print currDate
 		prevMonth =  currDate - datetime.timedelta(days=90)
@@ -258,7 +261,6 @@ class PricingScore:
 		total=0.0
 		for proj in priceDict:
 			total+= freq_project[proj]
- 		print "priceDict " , priceDict
 		for proj in priceDict:
 			if total!=0:
 				x = round(priceDict[proj]* (max(0.8,1.0-float(freq_project[proj])/total)),0) / 2
@@ -266,7 +268,6 @@ class PricingScore:
 				x = (priceDict[proj]) / 2
 
 			priceDict[proj] = int(x)
-		print "priceDict " , priceDict
 		return priceDict
 
 if __name__ == '__main__':
