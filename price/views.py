@@ -68,7 +68,7 @@ def price(request):
             locationName.append(location.getLocationName(locationId))
     allProjectInfo = getAllProjectInfo(cityName)
 #     print len(allProjectInfo)
-    result = pricingScore.pricingLeads(int(budget),locationName,int(bhk),possession,allProjectInfo)
+    result = pricingScore.pricingLeads(int(budget),locationName,float(bhk),possession,allProjectInfo)
 #     dummyResult = {'544':'250','545':'300','546':'350'}
     return Response(result)
 
