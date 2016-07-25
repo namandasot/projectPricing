@@ -52,11 +52,16 @@ class PricingScore:
 		return relList
 
 	def pricingLeads(self,budget,location,BHK,possesion,propList):
-		x = self.pricingRelScore(budget,location,BHK,possesion,propList)
-		x = self.price1(x)
-		returnDict = self.quality_factor(x)
-		returnDict = self.cost_factor(returnDict)
-		returnDict = self.getPrices(returnDict)
+		returnDict = {}
+		try:
+			x = self.pricingRelScore(budget,location,BHK,possesion,propList)
+			x = self.price1(x)
+			returnDict = self.quality_factor(x)
+			returnDict = self.cost_factor(returnDict)
+			returnDict = self.getPrices(returnDict)
+		except:
+			print "Error Occurred"
+			
 		return returnDict
 
 	def getPrices(self,propList):
