@@ -60,20 +60,40 @@ class PricingScore:
 
 	def pricingLeads(self,budget,location,BHK,possesion,propList):
 		returnDict = {}
-		# try:
+		try:
 			# for i in propList:
-		timeCurr = time.time()
-		x = self.pricingRelScore(budget,location,BHK,possesion,propList)
-		print "pricingRelScore",time.time() - timeCurr
-		x = self.price1(x,location)
-		print "price1" ,time.time() - timeCurr
-		returnDict = self.quality_factor(x)
-		print "quality_factor" , time.time() - timeCurr
-		returnDict = self.cost_factor(returnDict)
-		print "cost_factor" , time.time() - timeCurr
-		returnDict = self.getPrices(returnDict)
-		print "getPrices" , time.time() - timeCurr
-	# except:
+			timeCurr = time.time()
+			x = self.pricingRelScore(budget,location,BHK,possesion,propList)
+			print x
+			print "pricingRelScore",time.time() - timeCurr
+
+			x = self.price1(x,location)
+			print x
+			print "price1" ,time.time() - timeCurr
+
+			try:
+				returnDict = self.quality_factor(x)
+				print returnDict
+				print "quality_factor" , time.time() - timeCurr
+			except:
+				print "Except: Quality"
+				returnDict = x
+			try:
+				returnDict = self.cost_factor(returnDict)
+				print returnDict		
+				print "cost_factor" , time.time() - timeCurr
+			except:
+				print "Except: cost_factor"
+				returnDict = returnDict
+
+
+			returnDict = self.getPrices(returnDict)
+			print returnDict
+			print "getPrices" , time.time() - timeCurr
+
+		except:
+			print "Excpet:  Error occurred"
+			return returnDict
 			
 		return returnDict
 
