@@ -62,7 +62,7 @@ from rest_framework.decorators import api_view
 def price(request):
     locations = request.GET.get('location',None)
     budget = request.GET.get('budget',5000000)
-    bhk = request.GET.get('bhk',-1)
+    bhk = request.GET.get('bhk',1)
     possession = request.GET.get('possession',-1)
     cityName = ''
     locationName = []
