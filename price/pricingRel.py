@@ -213,6 +213,17 @@ class PricingScore:
 		propBHKList = map (lambda x:x[self.bhk],propList)
 		bhkScoreList = []
 		for i,propBHK in enumerate(propBHKList) : 
+			# handling LAND
+			if (searchBHK == -1):
+				if(propBHK <= 0):
+					bhkScore = 10
+				else:
+					self.filterArray[i] = 0
+					bhkScore = 0
+				bhkScoreList.append(bhkScore)
+				continue
+
+			
 			if(propBHK >= searchBHK ):
 				bhkScore = 10
 
@@ -221,8 +232,6 @@ class PricingScore:
 				bhkScore = 0
 
 			bhkScoreList.append(bhkScore)
-
-
 		bhkScoreList = np.array(bhkScoreList)
 		return bhkScoreList
 
