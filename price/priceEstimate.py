@@ -8,8 +8,7 @@ class pricingEstimate:
     def __init__(self):
         self.websiteLeadFactor = float(1.0/3)
         self.minPricingLead = 250
-        self.db = MySQLdb.connect(host="52.35.25.23" , port = 3306, user = "ITadmin",passwd = "ITadmin" ,db ="REDADMIN2")
-
+        
     def quality_factor(self,projList,projectNum):
         cur=self.db.cursor()
         currDate = datetime.date.today()
@@ -24,6 +23,7 @@ class pricingEstimate:
     
     
     def getPriceEstimate(self,budget,projectNo):
+        self.db = MySQLdb.connect(host="52.35.25.23" , port = 3306, user = "ITadmin",passwd = "ITadmin" ,db ="REDADMIN2")
         budget = budget
         cur=self.db.cursor()
         cur.execute("Select city_id,min_cpl,max_cpl,max_cpl_second,min_price_range,max_price_range,max_price_range_second from insta_lead_cpl ")
@@ -75,7 +75,8 @@ class pricingEstimate:
         cpl_amount_basic *= qualityFact
         returnDict = {}
         returnDict["allWebsite"] = int(max(self.minPricingLead,cpl_amount_basic*self.websiteLeadFactor))
-        returnDict["allTelephonic"] =  int(cpl_amount_basic)                    
+        returnDict["allTelephonic"] =  int(cpl_amount_basic)  
+        self.db.close()                  
         return returnDict
     
     

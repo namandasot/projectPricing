@@ -25,9 +25,7 @@ class PricingScore:
 		self.cost_weight=0.25
 		self.CPLCostMax = 3000
 		self.CPLCostMin = 250
-		self.db=MySQLdb.connect(host="52.35.25.23" , port = 3306, user = "ITadmin",passwd = "ITadmin" ,db ="REDADMIN2")
-		self.CPLdb=MySQLdb.connect(host="52.35.25.23" , port = 3306, user = "ITadmin",passwd = "ITadmin" ,db ="CPL")
-
+		
  
 	def cost_factor(self,relList):
 		cursor=self.CPLdb.cursor()
@@ -60,6 +58,9 @@ class PricingScore:
 
 	def pricingLeads(self,budget,location,BHK,possesion,propList):
 		returnDict = {}
+		self.db=MySQLdb.connect(host="52.35.25.23" , port = 3306, user = "ITadmin",passwd = "ITadmin" ,db ="REDADMIN2")
+		self.CPLdb=MySQLdb.connect(host="52.35.25.23" , port = 3306, user = "ITadmin",passwd = "ITadmin" ,db ="CPL")
+
 		try:
 			# for i in propList:
 			timeCurr = time.time()
@@ -94,7 +95,8 @@ class PricingScore:
 		except:
 			print "Excpet:  Error occurred"
 			return returnDict
-			
+		self.CPLdb.close()
+		self.db.close()
 		return returnDict
 
 	def getPrices(self,propList):

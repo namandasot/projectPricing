@@ -41,7 +41,8 @@ class cityPricingEstimate:
         
         returnDict = {}
         returnDict["allWebsite"] = int(max(self.minPricingLead,cpl_amount_basic*self.websiteLeadFactor))
-        returnDict["allTelephonic"] =  int(cpl_amount_basic)                    
+        returnDict["allTelephonic"] =  int(cpl_amount_basic)   
+        db.close()                 
         return returnDict
     
 if __name__ == '__main__':
