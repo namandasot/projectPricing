@@ -66,17 +66,18 @@ def price(request):
     possession = request.GET.get('possession',-1)
     cityName = ''
     locationName = []
-
-
-    locationList = locations.split(',')
-    cityName = location.getCityName(locationList[0])
-#         for locationId in locationList:
-    locationName = location.getLocationName(locationList)
-#             if len(tempLoc)>0:
-#                 locationName.append(tempLoc[0])
-    allProjectInfo = getAllProjectInfo(cityName,locationList)
-    print len(allProjectInfo)
-    result = pricingScore.pricingLeads(int(budget),locationName,float(bhk),possession,allProjectInfo)
+    try:
+        locationList = locations.split(',')
+        cityName = location.getCityName(locationList[0])
+    #         for locationId in locationList:
+        locationName = location.getLocationName(locationList)
+    #             if len(tempLoc)>0:
+    #                 locationName.append(tempLoc[0])
+        allProjectInfo = getAllProjectInfo(cityName,locationList)
+        print len(allProjectInfo)
+        result = pricingScore.pricingLeads(int(budget),locationName,float(bhk),possession,allProjectInfo)
+    except:
+        result ={}
 
 #     dummyResult = {'544':'250','545':'300','546':'350'}
     return Response(result)
