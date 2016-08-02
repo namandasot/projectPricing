@@ -65,38 +65,26 @@ class PricingScore:
 			# for i in propList:
 			timeCurr = time.time()
 			x = self.pricingRelScore(budget,location,BHK,possesion,propList)
-			print x
-			print "pricingRelScore",time.time() - timeCurr
-
 			x = self.price1(x,location)
-			print x
-			print "price1" ,time.time() - timeCurr
-
 			try:
 				returnDict = self.quality_factor(x)
-				print returnDict
-				print "quality_factor" , time.time() - timeCurr
 			except:
 				print "Except: Quality"
 				returnDict = x
 			try:
 				returnDict = self.cost_factor(returnDict)
-				print returnDict		
-				print "cost_factor" , time.time() - timeCurr
 			except:
 				print "Except: cost_factor"
 				returnDict = returnDict
 
 
 			returnDict = self.getPrices(returnDict)
-			print returnDict
-			print "getPrices" , time.time() - timeCurr
 
 		except:
 			print "Excpet:  Error occurred"
-			return returnDict
 		self.CPLdb.close()
 		self.db.close()
+		print returnDict
 		return returnDict
 
 	def getPrices(self,propList):
