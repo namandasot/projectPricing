@@ -16,7 +16,6 @@ class Location:
 
     def getLocationName(self,locationId):
         data= AllProjectInfo.objects.filter(project_area__in=locationId).values_list('project_area_name',flat=True).distinct()
-        print data
         return data
         
     def getCityName(self,locationId):
@@ -38,7 +37,6 @@ def getPossessionDays(possessionDate):
 
 def getAllProjectInfo(cityName,locationId):
     allData = list(AllProjectInfo.objects.filter(project_area__in=locationId))
-    print len(allData)
     
     allProperties = []
     for propert in allData:
@@ -46,7 +44,6 @@ def getAllProjectInfo(cityName,locationId):
             propert.no_of_bedroom=-1
         propDict = AllProjectInfoSerializer(propert).data
         propDict['No_Of_Bedroom'] = float(str(propDict['No_Of_Bedroom']))
-#         print propDict['No_Of_Bedroom']
         propDict['Possession'] = getPossessionDays(propDict['Possession'])
         propDict['locality_name'] = propDict['Project_Area_Name'] +', '+ propDict['Project_Suburb_Name'] +', ' +propDict['Project_City_Name']
         if propDict['amenities']:
@@ -67,15 +64,18 @@ def price(request):
         possession = request.GET.get('possession',-1)
         cityName = ''
         locationName = []
+        print "Request : Location :" ,locations," budget :",budget, " bhk :",bhk," possession :",possession
    
         locationList = locations.split(',')
-        cityName = location.getCityName(locationList[0])
+        try:
+            cityName = location.getCityName(locationList[0])
+        except:
+            cityName = "Mumbai"
     #         for locationId in locationList:
         locationName = location.getLocationName(locationList)
     #             if len(tempLoc)>0:
     #                 locationName.append(tempLoc[0])
         allProjectInfo = getAllProjectInfo(cityName,locationList)
-        print len(allProjectInfo)
         result = pricingScore.pricingLeads(int(budget),locationName,float(bhk),possession,allProjectInfo)
     except:
         result ={}

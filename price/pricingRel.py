@@ -46,6 +46,7 @@ class PricingScore:
 		proj_cost=[]
 		for rows in cursor.fetchall():
 			proj_cost.append(rows)
+		cursor.close()
 
 		for project in relList:
 			for row in proj_cost:
@@ -237,14 +238,12 @@ class PricingScore:
 		locationList = [str(a) for a in locationList if a is not ""]
 		locationListStr = str(locationList).replace("[",'(').replace("]",")")
 		# print locationListStr
-
-
 		cur=self.db.cursor()
 		cur.execute("Select city_id,min_cpl,max_cpl,max_cpl_second,min_price_range,max_price_range,max_price_range_second from insta_lead_cpl ")
 		cplPricingCity = []
 		for row in cur.fetchall():
 			cplPricingCity.append(row)
-
+		cur.close()
 		cur=self.db.cursor()
 		query = "Select Project_No, Project_Config_No,Project_City, Minimum_Price,Maximum_Price from all_project_info where Project_Area_Name in " + locationListStr
 		# print query
@@ -253,6 +252,7 @@ class PricingScore:
 		for row in cur.fetchall():
 			projectCityMap.append(row)
 		# print projectCityMap
+		cur.close()
 
 		priceDict = {}
 		for projectConfigNo in relList:
@@ -306,6 +306,8 @@ class PricingScore:
 		list_project_lead= []
 		for row in cur.fetchall():
 			list_project_lead.append(row[0])
+
+		cur.close()
 
 		freq_project=Counter(list_project_lead)
 		
