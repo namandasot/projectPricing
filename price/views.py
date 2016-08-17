@@ -60,13 +60,14 @@ from rest_framework.decorators import api_view
 
 @api_view(['GET'])
 def price(request):
-    locations = request.GET.get('location',None)
-    budget = request.GET.get('budget',5000000)
-    bhk = request.GET.get('bhk',1)
-    possession = request.GET.get('possession',-1)
-    cityName = ''
-    locationName = []
     try:
+        locations = request.GET.get('location',None)
+        budget = request.GET.get('budget',5000000)
+        bhk = request.GET.get('bhk',1)
+        possession = request.GET.get('possession',-1)
+        cityName = ''
+        locationName = []
+   
         locationList = locations.split(',')
         cityName = location.getCityName(locationList[0])
     #         for locationId in locationList:
@@ -88,16 +89,24 @@ cpEstimate = cityPricingEstimate()
 
 @api_view(['GET'])
 def estimate(request):
-    budget= int(request.GET.get('budget',None))
-    project = int(request.GET.get('project',None))
-    result = pEstimate.getPriceEstimate(budget, project)
+    try:
+        budget= int(request.GET.get('budget',None))
+        project = int(request.GET.get('project',None))
+        result = pEstimate.getPriceEstimate(budget, project)
+    except:
+        result ={}
+        
     return Response(result)
 
 
 @api_view(['GET'])
 def cityEstimator(request):
-    budget= int(request.GET.get('budget',None))
-    city = int(request.GET.get('city',None))
-    result = cpEstimate.getPriceEstimate(budget, city)
+    try:
+        
+        budget= int(request.GET.get('budget',None))
+        city = int(request.GET.get('city',None))
+        result = cpEstimate.getPriceEstimate(budget, city)
+    except:
+        result ={}
     return Response(result)
     
