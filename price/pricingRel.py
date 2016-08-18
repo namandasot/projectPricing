@@ -88,7 +88,7 @@ class PricingScore:
 	# 		print propList
 			
 			x = self.pricingRelScore(budget,locationArr,BHK,possesion,propList)
-			print x
+# 			print x
 			returnDict = self.price1(x,propList)
 			try:
 				returnDict = self.quality_factor(returnDict)
