@@ -11,7 +11,7 @@ from cityPriceEstimate import cityPricingEstimate
 # Create your views here.
 
 pricingScore = PricingScore()
-
+"""
 class Location:  
 
     def getLocationName(self,locationId):
@@ -52,7 +52,7 @@ def getAllProjectInfo(cityName,locationId):
             propDict['amenities']=None
         allProperties.append(propDict)
     return allProperties
-
+"""
 from rest_framework.decorators import api_view
 
 @api_view(['GET'])
@@ -62,12 +62,14 @@ def price(request):
         budget = request.GET.get('budget',5000000)
         bhk = request.GET.get('bhk',1)
         possession = request.GET.get('possession',-1)
-        cityName = ''
-        locationName = []
+#         """
+#         cityName = ''
+#         locationName = []
         print 
         print "Request : Location :" ,locations," budget :",budget, " bhk :",bhk," possession :",possession
    
         locationList = locations.split(',')
+        """
         try:
             cityName = location.getCityName(locationList[0])
         except:
@@ -77,7 +79,10 @@ def price(request):
     #             if len(tempLoc)>0:
     #                 locationName.append(tempLoc[0])
         allProjectInfo = getAllProjectInfo(cityName,locationList)
+        
         result = pricingScore.pricingLeads(int(budget),locationName,float(bhk),possession,allProjectInfo)
+        """
+        result = pricingScore.pricingLeads(int(budget),locationList,float(bhk),possession)
     except:
         result ={}
 
