@@ -162,7 +162,7 @@ class PricingScore:
         propPriceList = map (lambda x:x[self.price],propList)
         budgetScoreList = []
         for i,propPrice in enumerate(propPriceList):
-            if(propPrice > searchBudget*1.2 or propPrice < searchBudget*0.7):
+            if(propPrice > searchBudget*1.15 or propPrice < searchBudget*0.85):
                 self.filterArray[i] = 0
                 budgetScoreList.append(0)
                 continue
