@@ -64,6 +64,8 @@ def price(request):
         possession = request.GET.get('possession',-1)
         cityName = ''
         locationName = []
+        bhkList = bhk.split(',')
+        bhk = min(bhkList)
         print 
         print "Request : Location :" ,locations," budget :",budget, " bhk :",bhk," possession :",possession
    
