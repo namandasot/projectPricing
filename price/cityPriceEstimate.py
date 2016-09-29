@@ -4,10 +4,11 @@ class cityPricingEstimate:
     def __init__(self):
         self.websiteLeadFactor = float(1.0/3)
         self.minPricingLead = 250
+        self.redAdminDB = "52.66.172.140"
         
     def getPriceEstimate(self,budget,city):
         budget = budget
-        db=MySQLdb.connect(host="52.35.25.23" , port = 3306, user = "ITadmin",passwd = "ITadmin" ,db ="REDADMIN2")
+        db=MySQLdb.connect(host=self.redAdminDB , port = 3306, user = "ITadmin",passwd = "ITadmin" ,db ="REDADMIN2")
         cur=db.cursor()
         cur.execute("Select city_id,min_cpl,max_cpl,max_cpl_second,min_price_range,max_price_range,max_price_range_second from insta_lead_cpl ")
         

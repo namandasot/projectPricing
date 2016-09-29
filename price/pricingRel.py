@@ -25,6 +25,7 @@ class PricingScore:
         self.cost_weight=0.25
         self.CPLCostMax = 3000
         self.CPLCostMin = 250
+        self.redAdminDB = "52.66.172.140"
         
  
     def cost_factor(self,relList):
@@ -59,8 +60,8 @@ class PricingScore:
 
     def pricingLeads(self,budget,location,BHK,possesion,propList):
         returnDict = {}
-        self.db=MySQLdb.connect(host="52.35.25.23" , port = 3306, user = "ITadmin",passwd = "ITadmin" ,db ="REDADMIN2")
-        self.CPLdb=MySQLdb.connect(host="52.35.25.23" , port = 3306, user = "ITadmin",passwd = "ITadmin" ,db ="CPL")
+        self.db=MySQLdb.connect(host=self.redAdminDB , port = 3306, user = "ITadmin",passwd = "ITadmin" ,db ="REDADMIN2")
+        self.CPLdb=MySQLdb.connect(host=self.redAdminDB , port = 3306, user = "ITadmin",passwd = "ITadmin" ,db ="CPL")
 
         try:
             # for i in propList:
