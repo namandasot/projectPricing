@@ -4,7 +4,7 @@ class cityPricingEstimate:
     def __init__(self):
         self.websiteLeadFactor = float(1.0/3)
         self.minPricingLead = 250
-        self.redAdminDB = "52.66.172.140"
+        self.redAdminDB = "52.66.177.232"
         
     def getPriceEstimate(self,budget,city):
         budget = budget

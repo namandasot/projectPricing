@@ -25,7 +25,7 @@ class PricingScore:
         self.cost_weight=0.25
         self.CPLCostMax = 3000
         self.CPLCostMin = 250
-        self.redAdminDB = "52.66.172.140"
+        self.redAdminDB = "52.66.177.232"
         
  
     def cost_factor(self,relList):

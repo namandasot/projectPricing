@@ -75,7 +75,7 @@ WSGI_APPLICATION = 'LeadPricing.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
-HOSTIP = '52.66.172.140'
+HOSTIP = '52.66.177.232'
 HOSTUSER = 'ITadmin'
 HOSTPASWD = 'ITadmin'
 
