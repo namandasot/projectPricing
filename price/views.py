@@ -80,8 +80,11 @@ def price(request):
     #                 locationName.append(tempLoc[0])
         allProjectInfo = getAllProjectInfo(cityName,locationList)
         result = pricingScore.pricingLeads(int(budget),locationName,float(bhk),possession,allProjectInfo)
+        if not result:
+            result ={"no_result"}
+            
     except:
-        result ={}
+        result ={"no_result"}
 
 #     dummyResult = {'544':'250','545':'300','546':'350'}
     return Response(result)
