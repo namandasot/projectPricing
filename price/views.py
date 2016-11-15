@@ -99,7 +99,7 @@ def price(request):
             result ={"no_result"}
             
     except:
-        result ={"no_result"}
+        result ={}
 
 #     dummyResult = {'544':'250','545':'300','546':'350'}
     return Response(result)
