@@ -59,6 +59,21 @@ from rest_framework.decorators import api_view
 def price(request):
     try:
         locations = request.GET.get('location',None)
+        ####Hinjewadi exception#### Chandan
+        try:
+            loc = locations.split(",")
+            #return  Response(loc)
+            loc = [int(x) for x in loc]
+            loc_set = set(loc)
+            fixed_locations = [857,3266,434,3115,2927,3271,3685]
+            for x in fixed_locations:
+                if x in loc_set:
+                    loc_set.update(fixed_locations)
+            locations = [str(x) for x in list(loc_set)]
+            locations = ",".join(locations)
+        except Exception, e:
+            pass
+        #########################################
         budget = request.GET.get('budget',5000000)
         bhk = request.GET.get('bhk',1)
         possession = request.GET.get('possession',-1)
