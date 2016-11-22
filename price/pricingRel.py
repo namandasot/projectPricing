@@ -110,7 +110,7 @@ class PricingScore:
         for i,projectConfigNo in enumerate(projectConfigNoList):
             # print projectConfigNo
             if(self.filterArray[i]==1):
-                if(pricingRelScoreArr[i] > 6.5):
+                if(pricingRelScoreArr[i] > 5.0):
                     d[projectConfigNo] = (pricingRelScoreArr[i] +3)/10.0
         return d
 
@@ -163,15 +163,15 @@ class PricingScore:
         propPriceList = map (lambda x:x[self.price],propList)
         budgetScoreList = []
         for i,propPrice in enumerate(propPriceList):
-            if(propPrice > searchBudget*1.15 or propPrice < searchBudget*0.85):
+            if(propPrice > searchBudget*1.15 or propPrice < searchBudget*0.67):
                 self.filterArray[i] = 0
                 budgetScoreList.append(0)
                 continue
                 
             if(searchBudget >= propPrice):
-                budgetScore = self.getLineValueAll(searchBudget,10,searchBudget*0.4,2,propPrice)
+                budgetScore = self.getLineValueAll(searchBudget,10,searchBudget*0.3,2,propPrice)
             else:
-                budgetScore = self.getLineValueAll(searchBudget,10,searchBudget*1.2,2,propPrice)
+                budgetScore = self.getLineValueAll(searchBudget,10,searchBudget*1.3,2,propPrice)
             budgetScore = min(budgetScore,10)
             budgetScore = max(budgetScore,0)
 
